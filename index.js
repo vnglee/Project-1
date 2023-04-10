@@ -1,20 +1,15 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-// let gameOn = false
-// let animationId
+let animationId
+let obstacleId
 let obstacles = []
-
-
-
 const road = new Image();
 road.src = "./images/roadMap.png";
 
 const potholeObst = new Image();
 potholeObst.src = "./images/Pothole.png"
 
-// const car = new Image()
-// car.src = '.images/car.png'
 
 //CLASSES================
 class Car {
@@ -30,12 +25,12 @@ class Car {
   }
   //classMethods
   moveLeft() {
-    if (this.x > 10) {
+    if (this.x > 200) {
       this.x -= 10;
     }
   }
   moveRight() {
-    if (this.x < canvas.width - 50) {
+    if (this.x < canvas.width - 247) {
       this.x += 10;
     }
   }
@@ -55,105 +50,113 @@ class Car {
 }
 
 // CLASS POTHOLES OBSTACLES
+
+
 class Potholes {
     constructor() {
-      this.x = Math.random() * canvas.width;
+      this.x = Math.floor(Math.random() * 600);
       this.y = 0;
       this.width = Math.floor(Math.random() * 100);
       this.height = 20;
   
     }
+    update() {
+        this.y +=1
+    }
     //methods
     draw() {
       ctx.drawImage(potholeObst, this.x, this.y)
-      ctx.fillRect(this.x, this.y, this.width, this.height);
     }
   
-  //   moveDown() {
-  //     this.y +=1;
-  //   }
+    // moveDown() {
+    //   this.y +=1;
+    // }
   
+}
 
-// const player = {
-//     x: canvas.width,
-//     y: canvas.height,
-//     width: 50,
-//     height: 100,
-//     draw() {
-//         ctx.drawImage(playerCar, this.x, this.y, this.width, this.height)
-//     }
-// }
-
-
+const gameObstacle = new Potholes()
 const playerCar = new Car()
 //FUNCTIONS=====================
+
 function startGame() {
-  // if (!gameOn) {
+
   ctx.drawImage(road, 0, 0, 800, 600);
   playerCar.draw();
 
-  // setInterval(()=>{
-  //     //iterate through array of rectangles and update y positions
-  //     speed += 1;
-  //     updateCanvas();
-  //   }, 20)
-  //  // animationId = setInterval(animationLoop, 16)
-  // //   obstacleId = setInterval(()=> {
-  // //     obstaclesArr.push(new Obstacle())
-  // //   }, 2000)
-  // //   gameOn = true
-  //   console.log("starting...")
-  // // }
+  setInterval(()=>{
+      speed += 1;
+      updateCanvas();
+    }, 20)
+
+    setInterval(()=>{
+        obstacles.push(new Potholes) 
+      },1000)
+// animationId = setInterval(animationLoop, 16)
+// obstacleId = setInterval(()=> {
+//   obstacles.push(new Potholes())
+// }, 2000)
 }
+
 
 function updateCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(road, 0, 0, 800, 600);
   playerCar.draw();
-  for (let i = 0; i < rectangles.length; i++) {
-    rectangles[i].update();
-    rectangles[i].moveDown();
+  for (let i = 0; i < obstacles.length; i++) {
+    obstacles[i].update();
+    obstacles[i].moveDown();
   }
-
-
-  
 }
 
+function animationLoop() {
 
-function generateObstacles () {
+    ctx.clearRect(0, 0, 800, 600)
+    ctx.drawImage(road, 0, 0, 800, 600)
+    playerCar.draw()
   
-    obstacles.push(new Obstacle())
+    
+    obstacles.forEach((obstacle, i, arr) => {
+      checkCollision(obstacle)
+      obstacle.y += 1
+      if (obstacle.y > canvas.height) {
+        score += 1
+        arr.splice(i, 1)
+      }
+      obstacle.draw()
+    })
+    showScore()
+    
+    if (score > 1) {
+      gameOver()
+    }
+  }
+
+function newObstacles () {
+  
+    obstacles.push(new Potholes())
     
   }
-// function updateCanvas() {
-//     ctx.clearRect(0, 0, canvas.width, canvas.height);
-//     ctx.drawImage(road, 0, 0, 800, 500);
-//     playerCar.draw();
-// }
 
-// function animationLoop() {
+//   event listeners
+document.addEventListener('keydown', e => {
+  switch (e.keyCode) {
+    case 37:
+      playerCar.moveLeft();
+      break;
+    case 39:
+        playerCar.moveRight();
+      break;
+    case 38:
+        playerCar.moveUp();
+      break;
+    case 40:
+        playerCar.moveDown();
+  }
+  updateCanvas();
+})
 
-//     ctx.clearRect(0, 0, 800, 500)
-//     ctx.drawImage(road, 0, 0, 800, 500)
-//     player.draw()
-// }
 window.onload = () => {
   document.getElementById("btn").onclick = () => {
     startGame();
   };
 }
-//   event listeners
-  document.addEventListener("keydown", (event) => {
-    switch (e.keyCode) {
-        case 37:
-          playerCar.moveLeft();
-          break;
-        case 39:
-            playerCar.moveRight();
-          break;
-        case 38:
-            playerCar.moveUp();
-          break;
-        case 40:
-            playerCar.moveDown();
-  })
