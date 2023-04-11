@@ -58,19 +58,19 @@ class Potholes {
   constructor(){
     this.x = Math.floor(Math.random() * 500);
     this.y = 0;
-    this.width = 50;
-    this.height = 50;
+    this.width = 50 + Math.floor(Math.random() * 110);
+    this.height = 50 + Math.floor(Math.random() * 110);
   }
 
   //methods
 
-  // moveDown() {
-  //   console.log('this string moving down')
-  //   this.y += 1;
-  // }
+  moveDown() {
+    // console.log('this string moving down')
+    this.y += 1;
+  }
   
   draw(){
-    console.log('this is line 71')
+    // console.log('this is line 71')
     ctx.drawImage(potholeObst, this.x, this.y, this.width, this.height);
   }
 
@@ -82,45 +82,38 @@ const playerCar = new Car();
 
 
 //UPDATE GAME===================================================================
-// function updateGame() {
-//   ctx.clearRect(0, 0, canvas.width, canvas.height);
-//   ctx.drawImage(road, 0, 0, 800, 600);
-//   playerCar.draw();
-//   for (let i = 0; i < obstacles.length; i++) {
-//     obstacles[i].update();
-//     obstacles[i].draw();
-//   }
-// }
+
 
 function updateGame() {
+  // speed += 1
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(road, 0, 0, 800, 600);
   playerCar.draw();
-  // ctx.drawImage(potholeObst, 0, 0, 80, 50)
-  // gameObstacle.draw()
   if (obstacles.length > 0) {
     for (let i = 0; i < obstacles.length; i++) {
       // console.log('obstacles', obstacles)
-      // obstacles.moveDown();
-      obstacles.draw();
+      obstacles[i].moveDown();
+      obstacles[i].draw();
+      if(obstacles[i].y > canvas.height) {
+        obstacles.splice(i, 1)
+      }
     }
   }
   
 }
+
+function generateObstacles() {
+  obstacles.push(new Potholes())
+}
 //START GAME FUNCTION=======================================================================
 
 function startGame() {
-  ctx.drawImage(road, 0, 0, 800, 600);
-  playerCar.draw();
+  // ctx.drawImage(road, 0, 0, 800, 600);
+  // playerCar.draw();
 
-  updateId = setInterval(() => {
-    speed += 1;
-    updateGame();
-  }, 20);
+  updateId = setInterval(updateGame, 20);
 
-  obstacleId = setInterval(() => {
-    obstacles.push(new Potholes());
-  }, 1000);
+  obstacleId = setInterval(generateObstacles, 2000);
 
 }
 
