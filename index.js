@@ -1,6 +1,8 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+let updateId
+let obstacleId
 
 let speed = 0;
 let obstacles = [];
@@ -53,62 +55,80 @@ class Car {
 // CLASS POTHOLES OBSTACLES=======================================================================
 
 class Potholes {
-  constructor() {
+  constructor(){
     this.x = Math.floor(Math.random() * 500);
     this.y = 0;
-    this.width = 0;
-    this.height = 20;
+    this.width = 50;
+    this.height = 50;
   }
 
   //methods
 
-  moveDown() {
-    this.y += 1;
-  }
+  // moveDown() {
+  //   console.log('this string moving down')
+  //   this.y += 1;
+  // }
   
-  draw() {
-    ctx.drawImage(potholeObst, this.x, this.y);
+  draw(){
+    console.log('this is line 71')
+    ctx.drawImage(potholeObst, this.x, this.y, this.width, this.height);
   }
 
 
 }
-
-const gameObstacle = new Potholes();
+//================================================
+//const gameObstacle = new Potholes();
 const playerCar = new Car();
-//FUNCTIONS=======================================================================
+
+
+//UPDATE GAME===================================================================
+// function updateGame() {
+//   ctx.clearRect(0, 0, canvas.width, canvas.height);
+//   ctx.drawImage(road, 0, 0, 800, 600);
+//   playerCar.draw();
+//   for (let i = 0; i < obstacles.length; i++) {
+//     obstacles[i].update();
+//     obstacles[i].draw();
+//   }
+// }
+
+function updateGame() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(road, 0, 0, 800, 600);
+  playerCar.draw();
+  // ctx.drawImage(potholeObst, 0, 0, 80, 50)
+  // gameObstacle.draw()
+  if (obstacles.length > 0) {
+    for (let i = 0; i < obstacles.length; i++) {
+      // console.log('obstacles', obstacles)
+      // obstacles.moveDown();
+      obstacles.draw();
+    }
+  }
+  
+}
+//START GAME FUNCTION=======================================================================
 
 function startGame() {
   ctx.drawImage(road, 0, 0, 800, 600);
   playerCar.draw();
 
-  setInterval(() => {
+  updateId = setInterval(() => {
     speed += 1;
-    updateCanvas();
+    updateGame();
   }, 20);
 
-  setInterval(() => {
+  obstacleId = setInterval(() => {
     obstacles.push(new Potholes());
   }, 1000);
 
-
-}
-//===================================================================
-function updateCanvas() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(road, 0, 0, 800, 600);
-  playerCar.draw();
-  for (let i = 0; i < obstacles.length; i++) {
-    // obstacles[i].update();
-    // obstacles[i].moveDown()
-  }
 }
 
-//===================================================================
-function newObstacles() {
-  obstacles.push(new Potholes());
-}
+//GAME OVER FUNCTION=======================================================================
+//COLLISION FUNCTION=======================================================================
+//SCORE FUNCTION=======================================================================
 
-//event listeners=======================================================================
+//EVENT LISTENER=======================================================================
 document.addEventListener("keydown", (e) => {
   switch (e.keyCode) {
     case 37:
@@ -123,7 +143,7 @@ document.addEventListener("keydown", (e) => {
     case 40:
       playerCar.moveDown();
   }
-  updateCanvas();
+  updateGame();
 });
 
 window.onload = () => {
