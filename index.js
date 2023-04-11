@@ -17,7 +17,7 @@ class Car {
   //class constructor
   constructor() {
     this.x = 385;
-    this.y = 510;
+    this.y = 530;
     const car = new Image();
     car.addEventListener("load", () => {
       this.car = car;
@@ -41,7 +41,7 @@ class Car {
     }
   }
   moveDown() {
-    if (this.y < canvas.height - 100) {
+    if (this.y < canvas.height - 70) {
       this.y += 10;
     }
   }
