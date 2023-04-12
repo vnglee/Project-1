@@ -4,10 +4,10 @@ const ctx = canvas.getContext("2d");
 let gameOn = false;
 let updateId;
 let obstacleId;
-let explosionId;
-let frameCount = 0;
+
 let score = 0;
 let obstacles = [];
+let startSpeed = 0;
 
 const road = new Image();
 road.src = "./images/map2.png";
@@ -98,6 +98,7 @@ function updateGame() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(road, 0, 0, 900, 517);
   playerCar.draw();
+// bg.play()
   if (obstacles.length > 0) {
     for (let i = 0; i < obstacles.length; i++) {
       // console.log('obstacles', obstacles)
@@ -117,10 +118,15 @@ function updateGame() {
 function generateObstacles() {
   obstacles.push(new Potholes());
 }
+
+function increaseSpeed() {
+  startSpeed = startSpeed+1
+  // setInterval(updateGame, 20)
+}
 //START GAME FUNCTION=======================================================================
 function startGame() {
   gameOn = true;
-  // bg.play();
+  
   updateId = setInterval(updateGame, 20);
 
   obstacleId = setInterval(generateObstacles, 1000);
@@ -128,20 +134,20 @@ function startGame() {
 //GAME OVER FUNCTION======================================================
 function gameOver() {
   // explodeBg.play()
-  bg.muted = true;
-
+  // bg.muted = true;
   clearInterval(updateId);
   clearInterval(obstacleId);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "black";
-  ctx.font = "20px Arial";
+  ctx.font = "30px Arial";
 
   // if () {
-  ctx.fillText("You died", 400, 250);
+  ctx.fillText("You died!", 370, 250);
   ctx.font = "32px Arial";
   ctx.fillText(`Final Score: ${score}`, 340, 300);
+  ctx.fillText('Press the START button to play again', 170, 380)
   // } else {
   //   ctx.fillText("You win!", 380, 250);
   //   ctx.font = "32px Arial";
@@ -170,10 +176,10 @@ function carCollision(obst) {
 //SCORE FUNCTION===========================================================
 function gameScore() {
   ctx.fillStyle = "black";
-  ctx.fillRect(48, 15, 100, 35);
+  ctx.fillRect(128, 15, 100, 35);
   ctx.fillStyle = "white";
   ctx.font = "20px Arial";
-  ctx.fillText(`Score: ${score}`, 60, 40);
+  ctx.fillText(`Score: ${score}`, 141, 40);
 }
 //EVENT LISTENER==========================================================
 document.addEventListener("keydown", (e) => {
@@ -196,7 +202,6 @@ window.onload = () => {
   document.getElementById("btn").onclick = () => {
     if (!gameOn) {
       startGame();
-    
     }
   };
 };

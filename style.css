@@ -3,10 +3,11 @@
 body {
     padding: 0;
     text-align: center;
-    /* background-color: darkolivegreen; */
     color: red;
     font-family: 'Lato';
     font-size: large;
+    background-image: url('./images/bg.jpg');
+    background-repeat: repeat-y;
   }
   
   .game-intro {
@@ -25,9 +26,9 @@ body {
   }
  
   
- canvas {
+ /* canvas {
     border: 1px solid black
- } 
+ }  */
   /* .roadimg {
     width: 480px;
   } */
