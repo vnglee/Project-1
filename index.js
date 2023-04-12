@@ -15,19 +15,24 @@ road.src = "./images/map2.png";
 const potholeObst = new Image();
 potholeObst.src = "./images/newpothole.png";
 
-const car = new Image()
+const car = new Image();
 car.src = "./images/car.png";
 
-const explosion = new Image()
+const explosion = new Image();
 explosion.src = "./images/explosion.png";
 
+const bg = new Audio();
+bg.src = "./sounds/car_chase.mp3";
+
+const explodeBg = new Audio()
+explodeBg.src = "./sounds/explosion1.mp3"
 
 //CLASS CAR=======================================================================================
 class Car {
   //class constructor
   constructor() {
     this.x = 440;
-    this.y = 470;
+    this.y = 450;
     this.width = 47;
     this.height = 57;
     const car = new Image();
@@ -48,12 +53,12 @@ class Car {
     }
   }
   moveUp() {
-    if (this.y > 30) {
+    if (this.y > 10) {
       this.y -= 10;
     }
   }
   moveDown() {
-    if (this.y < canvas.height - 120) {
+    if (this.y < canvas.height - 70) {
       this.y += 10;
     }
   }
@@ -66,7 +71,7 @@ class Car {
 
 class Potholes {
   constructor() {
-    this.x = Math.floor(Math.random() * 440) + 160;
+    this.x = Math.floor(Math.random() * 280) + 300;
     this.y = 0;
     this.width = 10 + Math.floor(Math.random() * 100);
     this.height = 10 + Math.floor(Math.random() * 100);
@@ -100,13 +105,13 @@ function updateGame() {
       obstacles[i].draw();
       carCollision(obstacles[i]);
       if (obstacles[i].y > canvas.height) {
-        score += 1
+        score += 1;
         obstacles.splice(i, 1);
         // console.log('detected')
       }
     }
   }
-  gameScore()
+  gameScore();
 }
 //GENERATE OBSTACLES FUNCTION===============================================================
 function generateObstacles() {
@@ -115,12 +120,15 @@ function generateObstacles() {
 //START GAME FUNCTION=======================================================================
 function startGame() {
   gameOn = true;
+  // bg.play();
   updateId = setInterval(updateGame, 20);
 
   obstacleId = setInterval(generateObstacles, 1000);
 }
 //GAME OVER FUNCTION======================================================
 function gameOver() {
+  // explodeBg.play()
+  bg.muted = true;
 
   clearInterval(updateId);
   clearInterval(obstacleId);
@@ -130,20 +138,22 @@ function gameOver() {
   ctx.fillStyle = "black";
   ctx.font = "20px Arial";
 
-  if (score < 5) {
-    ctx.fillText("You died", 380, 250);
-    ctx.font = "32px Arial";
-    ctx.fillText(`Final Score: ${score}`, 300, 300);
-  } else {
-    ctx.fillText("You win!", 380, 250);
-    ctx.font = "32px Arial";
-    ctx.fillText(`Final Score: ${score}`, 300, 320);
-  }
-  obstacles = []
+  // if () {
+  ctx.fillText("You died", 400, 250);
+  ctx.font = "32px Arial";
+  ctx.fillText(`Final Score: ${score}`, 340, 300);
+  // } else {
+  //   ctx.fillText("You win!", 380, 250);
+  //   ctx.font = "32px Arial";
+  //   ctx.fillText(`Final Score: ${score}`, 300, 320);
+  // }
+ 
+  obstacles = [];
   playerCar.x = 440;
-  playerCar.y = 470;
+  playerCar.y = 450;
   score = 0;
   gameOn = false;
+
 }
 //COLLISION FUNCTION==========================================================
 function carCollision(obst) {
@@ -159,11 +169,11 @@ function carCollision(obst) {
 }
 //SCORE FUNCTION===========================================================
 function gameScore() {
-  ctx.fillStyle = 'black'
-  ctx.fillRect(48,15,100,35)
-  ctx.fillStyle = 'white'
-  ctx.font = '20px Arial'
-  ctx.fillText(`Score: ${score}`, 60, 40)
+  ctx.fillStyle = "black";
+  ctx.fillRect(48, 15, 100, 35);
+  ctx.fillStyle = "white";
+  ctx.font = "20px Arial";
+  ctx.fillText(`Score: ${score}`, 60, 40);
 }
 //EVENT LISTENER==========================================================
 document.addEventListener("keydown", (e) => {
@@ -186,7 +196,7 @@ window.onload = () => {
   document.getElementById("btn").onclick = () => {
     if (!gameOn) {
       startGame();
+    
     }
-
   };
 };
