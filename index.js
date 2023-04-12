@@ -18,8 +18,7 @@ potholeObst.src = "./images/newpothole.png";
 const car = new Image();
 car.src = "./images/car.png";
 
-const explosion = new Image();
-explosion.src = "./images/explosion.png";
+
 
 const bg = new Audio();
 bg.src = "./sounds/car_chase.mp3";
@@ -98,7 +97,7 @@ function updateGame() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(road, 0, 0, 900, 517);
   playerCar.draw();
-// bg.play()
+bg.play()
   if (obstacles.length > 0) {
     for (let i = 0; i < obstacles.length; i++) {
       // console.log('obstacles', obstacles)
@@ -181,6 +180,38 @@ function gameScore() {
   ctx.font = "20px Arial";
   ctx.fillText(`Score: ${score}`, 141, 40);
 }
+
+//EXPLOSION ANIMATION====================================================
+// const explosion = new Image();
+// explosion.src = "./images/explosion.png";
+
+// explosion.addEventListener('load', loadImage, false)
+// function loadImage(e) {
+//   animate()
+// }
+
+// let shift = 0
+// let frameWidth = 32
+// let frameHeight = 32
+// let totalFrames = 5
+// let currentFrame = 0
+
+// function animate() {
+//   context.clearRect(0, 0, 32, 32)
+
+//   context.drawImage(explosion, shift, 0, frameWidth, frameHeight, 0, 0, frameWidth, frameHeight)
+
+//   shift += frameWidth + 1
+
+//   if (currentFrame == totalFrames) {
+//     shift = 0
+//     currentFrame = 0
+//   }
+//   currentFrame++
+
+//   requestAnimationFrame(animate)
+
+// }
 //EVENT LISTENER==========================================================
 document.addEventListener("keydown", (e) => {
   switch (e.keyCode) {

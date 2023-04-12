@@ -1,14 +1,14 @@
 
-
 body {
     padding: 0;
     text-align: center;
     color: red;
-    font-family: 'Lato';
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: large;
     background-image: url('./images/bg.jpg');
     background-repeat: repeat-y;
   }
+  
   
   .game-intro {
     float: center;
@@ -25,46 +25,16 @@ body {
     height: 240;
   }
  
-  
  /* canvas {
     border: 1px solid black
  }  */
-  /* .roadimg {
-    width: 480px;
-  } */
 
 #btn {
-    /* background: #d95a34; */
     background: url(./images/btn.png);
     width: 110px;
     height: 36px;
     border: none;
-    /* background-image: -webkit-linear-gradient(top, #d95a34, #ad4436); */
-    /* background-image: -moz-linear-gradient(top, #d95a34, #ad4436);
-    background-image: -ms-linear-gradient(top, #d95a34, #ad4436);
-    background-image: -o-linear-gradient(top, #d95a34, #ad4436);
-    background-image: linear-gradient(to bottom, #d95a34, #ad4436); */
-    /* -webkit-border-radius: 28;
-    -moz-border-radius: 28;
-    border-radius: 28px;
-    font-family: Arial;
-    color: #ffffff;
-    font-size: 20px;
-    padding: 10px 20px 10px 20px;
-    text-decoration: none;
-     */
-
   }
-  
-  /* #btn:hover {
-    background: #ba2f25;
-    background-image: -webkit-linear-gradient(top, #ba2f25, #d93434);
-    background-image: -moz-linear-gradient(top, #ba2f25, #d93434);
-    background-image: -ms-linear-gradient(top, #ba2f25, #d93434);
-    background-image: -o-linear-gradient(top, #ba2f25, #d93434);
-    background-image: linear-gradient(to bottom, #ba2f25, #d93434);
-    text-decoration: none;
-  } */
 
   #game-road {
     float: right;
