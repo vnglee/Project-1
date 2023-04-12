@@ -10,10 +10,10 @@ let score = 0;
 let obstacles = [];
 
 const road = new Image();
-road.src = "./images/roadMap.png";
+road.src = "./images/map2.png";
 
 const potholeObst = new Image();
-potholeObst.src = "./images/Pothole.png";
+potholeObst.src = "./images/newpothole.png";
 
 const car = new Image()
 car.src = "./images/car.png";
@@ -26,10 +26,10 @@ explosion.src = "./images/explosion.png";
 class Car {
   //class constructor
   constructor() {
-    this.x = 385;
-    this.y = 530;
-    this.width = 55;
-    this.height = 61;
+    this.x = 440;
+    this.y = 470;
+    this.width = 47;
+    this.height = 57;
     const car = new Image();
     car.addEventListener("load", () => {
       this.car = car;
@@ -38,22 +38,22 @@ class Car {
   }
   //classMethods
   moveLeft() {
-    if (this.x > 200) {
+    if (this.x > 265) {
       this.x -= 10;
     }
   }
   moveRight() {
-    if (this.x < canvas.width - 247) {
+    if (this.x < canvas.width - 307) {
       this.x += 10;
     }
   }
   moveUp() {
-    if (this.y > 0) {
+    if (this.y > 30) {
       this.y -= 10;
     }
   }
   moveDown() {
-    if (this.y < canvas.height - 70) {
+    if (this.y < canvas.height - 120) {
       this.y += 10;
     }
   }
@@ -66,7 +66,7 @@ class Car {
 
 class Potholes {
   constructor() {
-    this.x = Math.floor(Math.random() * 400) + 180;
+    this.x = Math.floor(Math.random() * 440) + 160;
     this.y = 0;
     this.width = 10 + Math.floor(Math.random() * 100);
     this.height = 10 + Math.floor(Math.random() * 100);
@@ -91,7 +91,7 @@ const playerCar = new Car();
 function updateGame() {
   // speed += 1
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(road, 0, 0, 800, 600);
+  ctx.drawImage(road, 0, 0, 900, 517);
   playerCar.draw();
   if (obstacles.length > 0) {
     for (let i = 0; i < obstacles.length; i++) {
@@ -117,7 +117,7 @@ function startGame() {
   gameOn = true;
   updateId = setInterval(updateGame, 20);
 
-  obstacleId = setInterval(generateObstacles, 1500);
+  obstacleId = setInterval(generateObstacles, 1000);
 }
 //GAME OVER FUNCTION======================================================
 function gameOver() {
@@ -140,8 +140,8 @@ function gameOver() {
     ctx.fillText(`Final Score: ${score}`, 300, 320);
   }
   obstacles = []
-  playerCar.x = 385;
-  playerCar.y = 530;
+  playerCar.x = 440;
+  playerCar.y = 470;
   score = 0;
   gameOn = false;
 }
