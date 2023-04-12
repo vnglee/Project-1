@@ -93,21 +93,18 @@ const playerCar = new Car();
 
 //UPDATE GAME FUNCTION===================================================================
 function updateGame() {
-  // speed += 1
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(road, 0, 0, 900, 517);
   playerCar.draw();
 bg.play()
   if (obstacles.length > 0) {
     for (let i = 0; i < obstacles.length; i++) {
-      // console.log('obstacles', obstacles)
       obstacles[i].moveDown();
       obstacles[i].draw();
       carCollision(obstacles[i]);
       if (obstacles[i].y > canvas.height) {
         score += 1;
         obstacles.splice(i, 1);
-        // console.log('detected')
       }
     }
   }
@@ -132,8 +129,8 @@ function startGame() {
 }
 //GAME OVER FUNCTION======================================================
 function gameOver() {
-  // explodeBg.play()
-  // bg.muted = true;
+  explodeBg.play()
+  bg.pause()
   clearInterval(updateId);
   clearInterval(obstacleId);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
