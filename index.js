@@ -18,13 +18,14 @@ potholeObst.src = "./images/newpothole.png";
 const car = new Image();
 car.src = "./images/car.png";
 
-
-
 const bg = new Audio();
 bg.src = "./sounds/car_chase.mp3";
 
-const explodeBg = new Audio()
-explodeBg.src = "./sounds/explosion1.mp3"
+// const explodeBg = new Audio();
+// explodeBg.src = "./sounds/explosion1.mp3";
+
+const explodeBg = new Audio();
+explodeBg.src = "./sounds/explosion.ogg";
 
 //CLASS CAR=======================================================================================
 class Car {
@@ -96,7 +97,7 @@ function updateGame() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(road, 0, 0, 900, 517);
   playerCar.draw();
-bg.play()
+  bg.play()
   if (obstacles.length > 0) {
     for (let i = 0; i < obstacles.length; i++) {
       obstacles[i].moveDown();
@@ -114,15 +115,15 @@ bg.play()
 function generateObstacles() {
   obstacles.push(new Potholes());
 }
-
+//INCREASE OBSTACLE SPEED FUNCTION================================================
 function increaseSpeed() {
-  startSpeed = startSpeed+1
+  startSpeed = startSpeed + 1;
   // setInterval(updateGame, 20)
 }
 //START GAME FUNCTION=======================================================================
 function startGame() {
   gameOn = true;
-  
+  stopExplosionAudio(explodeBg)
   updateId = setInterval(updateGame, 20);
 
   obstacleId = setInterval(generateObstacles, 1000);
@@ -130,7 +131,7 @@ function startGame() {
 //GAME OVER FUNCTION======================================================
 function gameOver() {
   explodeBg.play()
-  bg.pause()
+  stopGameAudio(bg);
   clearInterval(updateId);
   clearInterval(obstacleId);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -143,19 +144,29 @@ function gameOver() {
   ctx.fillText("You died!", 370, 250);
   ctx.font = "32px Arial";
   ctx.fillText(`Final Score: ${score}`, 340, 300);
-  ctx.fillText('Press the START button to play again', 170, 380)
+  ctx.fillText("Press the START button to play again", 170, 380);
   // } else {
   //   ctx.fillText("You win!", 380, 250);
   //   ctx.font = "32px Arial";
   //   ctx.fillText(`Final Score: ${score}`, 300, 320);
   // }
- 
+
   obstacles = [];
   playerCar.x = 440;
   playerCar.y = 450;
   score = 0;
   gameOn = false;
+}
 
+
+function stopGameAudio() {
+  bg.pause();
+  bg.currentTime = 0;
+}
+
+function stopExplosionAudio() {
+  explodeBg.pause();
+  explodeBg.currentTime = 0;
 }
 //COLLISION FUNCTION==========================================================
 function carCollision(obst) {
@@ -190,13 +201,13 @@ function gameScore() {
 // let shift = 0
 // let frameWidth = 32
 // let frameHeight = 32
-// let totalFrames = 5
+// let totalFrames = 6
 // let currentFrame = 0
 
 // function animate() {
-//   context.clearRect(0, 0, 32, 32)
+//   ctx.clearRect(0, 0, 32, 32)
 
-//   context.drawImage(explosion, shift, 0, frameWidth, frameHeight, 0, 0, frameWidth, frameHeight)
+//   ctx.drawImage(explosion, shift, 0, frameWidth, frameHeight, 0, 0, frameWidth, frameHeight)
 
 //   shift += frameWidth + 1
 
@@ -209,6 +220,48 @@ function gameScore() {
 //   requestAnimationFrame(animate)
 
 // }
+
+
+//==============================
+explosion.onload = function() {
+  init();
+};
+const scale = 2;
+const width = 32;
+const height = 32;
+const scaledWidth = scale * width;
+const scaledHeight = scale * height;
+
+function drawFrame(frameX, frameY, canvasX, canvasY) {
+  ctx.drawImage(explosion,
+                frameX * width, frameY * height, width, height,
+                canvasX, canvasY, scaledWidth, scaledHeight);
+}
+
+const cycleLoop = [0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0];
+let currentLoopIndex = 0;
+let frameCount = 0;
+
+function step() {
+  frameCount++;
+  if (frameCount < 15) {
+    window.requestAnimationFrame(step);
+    return;
+  }
+  frameCount = 0;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawFrame(cycleLoop[currentLoopIndex], 0, 0, 0);
+  currentLoopIndex++;
+  if (currentLoopIndex >= cycleLoop.length) {
+    currentLoopIndex = 0;
+  }
+  window.requestAnimationFrame(step);
+}
+
+function init() {
+  window.requestAnimationFrame(step);
+}
+
 //EVENT LISTENER==========================================================
 document.addEventListener("keydown", (e) => {
   switch (e.keyCode) {
