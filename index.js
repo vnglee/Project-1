@@ -5,12 +5,16 @@ let gameOn = false;
 let updateId;
 let obstacleId;
 let explosionId;
+let speedId;
 let score = 0;
 let obstacles = [];
 let startSpeed = 0;
 let gamesPlayed = 0;
 let currentLoopIndex = 0;
 let frameCount = 0;
+let animationCount = 0;
+let obstacleSpeed = 2000;
+let potholeSpeed = 1;
 
 const road = new Image();
 road.src = "./images/map2.png";
@@ -71,7 +75,7 @@ class Car {
 
 class Potholes {
   constructor() {
-    this.x = Math.floor(Math.random() * 280) + 300;
+    this.x = Math.floor(Math.random() * 380) + 230;
     this.y = 0;
     this.width = 10 + Math.floor(Math.random() * 100);
     this.height = 10 + Math.floor(Math.random() * 100);
@@ -80,7 +84,7 @@ class Potholes {
   //methods
 
   moveDown() {
-    this.y += 1;
+    this.y += potholeSpeed;
   }
 
   draw() {
@@ -90,15 +94,21 @@ class Potholes {
 //================================================
 
 const playerCar = new Car();
-// console.log(playerCar)
 
 //UPDATE GAME FUNCTION===================================================================
 function updateGame() {
+  animationCount++;
+  if (animationCount % 500 === 0) {
+    obstacleSpeed /= 1.3;
+    potholeSpeed *= 1.3;
+    clearInterval(obstacleId);
+    obstacleId = setInterval(generateObstacles, obstacleSpeed);
+    console.log("increasing obstacle speed", obstacleSpeed, potholeSpeed);
+  }
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(road, 0, 0, 900, 517);
   playerCar.draw();
-  bg.play()
-  increaseSpeed()
+  bg.play();
   if (obstacles.length > 0) {
     for (let i = 0; i < obstacles.length; i++) {
       obstacles[i].moveDown();
@@ -116,28 +126,16 @@ function updateGame() {
 function generateObstacles() {
   obstacles.push(new Potholes());
 }
-//INCREASE SPEED FUNCTION================================================
-function increaseSpeed() {
-
-    startSpeed = gamesPlayed + 1;
-  
-  // setInterval(updateGame, 15000)
-}
 //START GAME FUNCTION=======================================================================
 function startGame() {
   gameOn = true;
-  increaseSpeed()
-  // stopExplosionAudio()
-  explodeBg.load()
-  updateId = setInterval(updateGame, 20);
 
-  obstacleId = setInterval(generateObstacles, 2000/startSpeed);
+  explodeBg.load();
+  updateId = setInterval(updateGame, 20);
+  obstacleId = setInterval(generateObstacles, 2000);
 }
 //GAME OVER FUNCTION======================================================
 function gameOver() {
-  // explodeBg.play()
-  // clearInterval(updateId);
-  // clearInterval(obstacleId);
   clearInterval(explosionId);
   currentLoopIndex = 0;
   frameCount = 0;
@@ -149,24 +147,18 @@ function gameOver() {
   ctx.fillStyle = "black";
   ctx.font = "30px Arial";
 
-  // if () {
   ctx.fillText("You died!", 370, 250);
   ctx.font = "32px Arial";
   ctx.fillText(`Final Score: ${score}`, 340, 300);
   ctx.fillText("Press the START button to play again", 170, 380);
-  // } else {
-  //   ctx.fillText("You win!", 380, 250);
-  //   ctx.font = "32px Arial";
-  //   ctx.fillText(`Final Score: ${score}`, 300, 320);
-  // }
 
   obstacles = [];
   playerCar.x = 440;
   playerCar.y = 450;
   score = 0;
+  obstacleSpeed = 2000;
+  potholeSpeed = 1;
   gameOn = false;
-  gamesPlayed += 1
-
 }
 
 //STOP AUDIO FUNCTIONS========================================================
@@ -187,68 +179,29 @@ function carCollision(obst) {
     playerCar.y < obst.y + obst.height &&
     playerCar.y + playerCar.height > obst.y
   ) {
-    // init()
     clearInterval(updateId);
     clearInterval(obstacleId);
     bg.pause();
     bg.currentTime = 0;
-    // stopGameAudio();
-    explodeBg.play()
-    explosionId = setInterval(()=> {step(playerCar.x, playerCar.y)}, 136)
-    // init(playerCar.x, playerCar.y)
-    // gameOver();
+    explodeBg.play();
+    explosionId = setInterval(() => {
+      step(playerCar.x, playerCar.y);
+    }, 160);
   }
 }
 //SCORE FUNCTION===========================================================
 function gameScore() {
   ctx.fillStyle = "black";
-  ctx.fillRect(128, 15, 100, 35);
+  ctx.fillRect(118, 15, 120, 35);
   ctx.fillStyle = "white";
   ctx.font = "20px Arial";
-  ctx.fillText(`Score: ${score}`, 141, 40);
+  ctx.fillText(`Score: ${score}`, 136, 40);
 }
 
 //EXPLOSION ANIMATION====================================================
 const explosion = new Image();
 explosion.src = "./images/explosion.png";
-
-// explosion.addEventListener('load', loadImage, false)
-// function loadImage(e) {
-//   animate()
-// }
-
-// let shift = 0
-// let frameWidth = 32
-// let frameHeight = 32
-// let totalFrames = 6
-// let currentFrame = 0
-
-// function animate() {
-//   ctx.clearRect(0, 0, 32, 32)
-
-//   ctx.drawImage(explosion, shift, 0, frameWidth, frameHeight, 0, 0, frameWidth, frameHeight)
-
-//   shift += frameWidth + 1
-
-//   if (currentFrame == totalFrames) {
-//     shift = 0
-//     currentFrame = 0
-//   }
-//   currentFrame++
-
-//   requestAnimationFrame(animate)
-
-// }
-
-
 //==============================
-// explosion.onload = function() {
-//   init();
-// };
-
-// explosion.onplay = function() {
-//   init();
-// };
 const scale = 2;
 const width = 32;
 const height = 32;
@@ -256,73 +209,36 @@ const scaledWidth = scale * width;
 const scaledHeight = scale * height;
 
 function drawFrame(frameX, frameY, canvasX, canvasY) {
-  ctx.drawImage(explosion,
-                frameX * width, frameY * height, width, height,
-                canvasX, canvasY, scaledWidth, scaledHeight);
+  ctx.drawImage(
+    explosion,
+    frameX * width,
+    frameY * height,
+    width,
+    height,
+    canvasX,
+    canvasY,
+    scaledWidth,
+    scaledHeight
+  );
 }
 
 const cycleLoop = [0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0];
-// let currentLoopIndex = 0;
-// let frameCount = 0;
-
-// function step(x, y) {
-//   frameCount++;
-//   if (frameCount < 15) {
-//     window.requestAnimationFrame(step(x, y));
-//     return;
-//   }
-//   frameCount = 0;
-//   ctx.clearRect(0, 0, canvas.width, canvas.height);
-//   ctx.fillStyle = 'black'
-//   ctx.fillRect(0, 0, canvas.width, canvas.height)
-//   drawFrame(cycleLoop[currentLoopIndex], 0, x, y);
-//   currentLoopIndex++;
-//   if (currentLoopIndex >= cycleLoop.length) {
-//     currentLoopIndex = 0;
-//   }
-//   window.requestAnimationFrame(step(x, y));
-// }
-
-// function init(x, y) {
-//   clearInterval(updateId);
-//   clearInterval(obstacleId);
-//   explodeBg.play()
-//   stopGameAudio(bg);
-//   window.requestAnimationFrame(step(x, y));
-// }
-
-// let currentLoopIndex = 0;
-// let frameCount = 0;
 
 function step(x, y) {
-
-
   frameCount++;
   if (frameCount < 12) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'black'
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     drawFrame(cycleLoop[currentLoopIndex], 0, x, y);
     currentLoopIndex++;
     if (currentLoopIndex >= cycleLoop.length) {
       currentLoopIndex = 0;
     }
-    // return;
   } else {
-    // clearInterval(explosionId)
-    gameOver()
+    gameOver();
   }
-
-//   (step(x, y));
 }
-
-// function init() {
-//   // (step(x, y));
-//   clearInterval(updateId);
-//   clearInterval(obstacleId);
-//   stopGameAudio();
-//   // explodeBg.play()
-// }
 
 //EVENT LISTENER==========================================================
 document.addEventListener("keydown", (e) => {
