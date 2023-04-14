@@ -21,8 +21,8 @@ body {
   }
   
   .logoimg {
-    width: 494px;
-    height: 240;
+    width: 330px;
+    height: 166px;
   }
  
  /* canvas {
@@ -31,8 +31,8 @@ body {
 
 #btn {
     background: url(./images/btn.png);
-    width: 110px;
-    height: 36px;
+    width: 90px;
+    height: 30px;
     border: none;
   }
 
