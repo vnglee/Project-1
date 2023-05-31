@@ -10,3 +10,5 @@ Other features of this game includes:
   - score tracker
   - music and animation sprite
 
+Deployed game: vnglee.github.io/Project-1
+
